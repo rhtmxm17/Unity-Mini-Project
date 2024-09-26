@@ -666,6 +666,75 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539370854}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &539596862
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701388333078776260, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_Name
+      value: Humanoid Monster Base
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 476f5fd65811d7141bdc7d6405651274, type: 3}
 --- !u!1 &640496531
 GameObject:
   m_ObjectHideFlags: 0
