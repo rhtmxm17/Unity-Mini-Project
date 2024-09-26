@@ -595,8 +595,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539370854}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1091402275}
@@ -681,7 +681,7 @@ PrefabInstance:
     - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -13.11
       objectReference: {fileID: 0}
     - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
         type: 3}
@@ -691,7 +691,7 @@ PrefabInstance:
     - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.14
       objectReference: {fileID: 0}
     - target: {fileID: 473692789415471862, guid: 476f5fd65811d7141bdc7d6405651274,
         type: 3}
@@ -732,6 +732,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Humanoid Monster Base
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189488717813512341, guid: 476f5fd65811d7141bdc7d6405651274,
+        type: 3}
+      propertyPath: m_Speed
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 476f5fd65811d7141bdc7d6405651274, type: 3}
@@ -879,6 +884,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4800381845215172, guid: d97370dd0ef63494294c8a893671547c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876548002419733010, guid: d97370dd0ef63494294c8a893671547c,
+        type: 3}
+      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
