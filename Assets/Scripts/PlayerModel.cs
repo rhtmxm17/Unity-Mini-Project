@@ -34,6 +34,11 @@ public class PlayerModel : MonoBehaviour
         set { localVelocity = value; OnLocalVelocityChanged.Invoke(); }
     }
 
+    public void TriggerAttack()
+    {
+        animator.SetTrigger(Hash_Attack);
+    }
+
     // Event
     public event UnityAction OnMovingChanged;
     public event UnityAction OnMoveSpeedChanged;
@@ -42,6 +47,7 @@ public class PlayerModel : MonoBehaviour
     // Hash
     private static readonly int Hash_VelocityZ = Animator.StringToHash("VelocityZ");
     private static readonly int Hash_IsMoving = Animator.StringToHash("IsMoving");
+    private static readonly int Hash_Attack = Animator.StringToHash("Attack");
 
     private void Awake()
     {

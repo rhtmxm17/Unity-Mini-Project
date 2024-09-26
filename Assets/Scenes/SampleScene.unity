@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 323148488}
   - component: {fileID: 323148491}
   - component: {fileID: 323148490}
-  - component: {fileID: 323148489}
   m_Layer: 0
   m_Name: Plane (1)
   m_TagString: Untagged
@@ -156,20 +155,6 @@ Transform:
   m_Father: {fileID: 1091402275}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &323148489
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 323148487}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &323148490
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -769,6 +754,12 @@ PrefabInstance:
       propertyPath: lookAtMarker
       value: 
       objectReference: {fileID: 1729525271}
+    - target: {fileID: -363060613717776787, guid: d97370dd0ef63494294c8a893671547c,
+        type: 3}
+      propertyPath: sampleProjectile
+      value: 
+      objectReference: {fileID: 3729594355163789498, guid: f7bd48b97dd072c4c98b94e3fe999ac4,
+        type: 3}
     - target: {fileID: 1348741524522182, guid: d97370dd0ef63494294c8a893671547c, type: 3}
       propertyPath: m_Name
       value: Player_CelLook
@@ -1040,7 +1031,6 @@ GameObject:
   - component: {fileID: 2023205715}
   - component: {fileID: 2023205718}
   - component: {fileID: 2023205717}
-  - component: {fileID: 2023205716}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1063,20 +1053,6 @@ Transform:
   m_Father: {fileID: 1091402275}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &2023205716
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023205714}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &2023205717
 MeshRenderer:
   m_ObjectHideFlags: 0

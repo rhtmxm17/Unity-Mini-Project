@@ -7,15 +7,19 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(NavMeshAgent), typeof(PlayerInput))]
 public class PlayerControl : MonoBehaviour
 {
+    [SerializeField] Transform cursorMarker;
+    [SerializeField] SampleSkill sampleProjectile;
+
     private NavMeshAgent agent;
     private PlayerModel model;
     private PlayerInput input;
+
     private InputAction cursorAction;
+    private InputAction fireAction;
     private LayerMask groundMask;
 
     private Vector2 moveInput;
-    [SerializeField] Transform cursorMarker;
-    [SerializeField] bool isLookCursor;
+    private bool isLookCursor;
 
     private void Awake()
     {
@@ -30,9 +34,13 @@ public class PlayerControl : MonoBehaviour
         if (input.camera == null)
             input.camera = Camera.main;
         cursorAction = input.actions["Point"];
+
         InputAction moveAction = input.actions["Move"];
         moveAction.performed += ReadMoveInput;
         moveAction.canceled += ReadMoveInput;
+
+        fireAction = input.actions["Fire"];
+        fireAction.started += CastEnter;
     }
 
 
@@ -67,6 +75,7 @@ public class PlayerControl : MonoBehaviour
 
     private void Movement()
     {
+        // 카메라의 up, right를 xz평면에서의 이동 방향으로 변환
         Vector3 moveAxisX = input.camera.transform.right;
         Vector3 moveAxisY = input.camera.transform.up;
 
@@ -79,11 +88,32 @@ public class PlayerControl : MonoBehaviour
         Vector3 velocity = model.MoveSpeed * (moveAxisX * moveInput.x + moveAxisY * moveInput.y);
         agent.Move(Time.deltaTime * velocity);
 
-        if (!isLookCursor)
+        if ((!isLookCursor) && model.IsMoving)
         {
             transform.rotation = Quaternion.LookRotation(velocity); // 이동 방향을 향해 회전
         }
 
         model.LocalVelocity = transform.worldToLocalMatrix * velocity;
+    }
+
+    private void CastEnter(InputAction.CallbackContext context)
+    {
+        // 공격 입력 비활성화
+        fireAction.started -= CastEnter;
+
+        isLookCursor = true;
+        StartCoroutine(Cast());
+        model.TriggerAttack();
+    }
+
+    private IEnumerator Cast()
+    {
+        yield return new WaitForSeconds(0.5f);
+        
+        fireAction.started += CastEnter;
+        var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
+        projectile.Init(model);
+
+        isLookCursor = false;
     }
 }
