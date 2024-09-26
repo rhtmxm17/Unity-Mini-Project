@@ -13,8 +13,8 @@ public class RoomData : ScriptableObject
         public Quaternion rotation;
     }
 
-    public List<SingleData> elements; // 방에 배치될 요소(몬스터, 지형지물)들
-    public GameObject floorShapePrefab; // Vector3.zero를 입구 기준점으로 하는 바닥 형태
+    public List<SingleData> props; // 방에 배치될 지형지물(NavMesh 생성에 사용되는 장애물)
+    public List<SingleData> units; // 방에 배치될 개체들
     public Vector3 exitPosition;    //
     public Quaternion exitRotation; // 다음 방을 이어붙일 출구 좌표
 }

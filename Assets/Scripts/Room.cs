@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Room : MonoBehaviour
 {
@@ -12,7 +13,34 @@ public class Room : MonoBehaviour
 
     private void Awake()
     {
-        floor = Instantiate(roomData.floorShapePrefab, this.transform);
+        // NavMesh 생성용 정보
+        List<NavMeshBuildSource> buildSources = new();
+
+        floor = new GameObject("Floor");
+        floor.transform.parent = this.transform;
+        floor.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        foreach (var element in roomData.props)
+        {
+            var clone = Instantiate(element.prefab, this.floor.transform);
+            clone.transform.SetLocalPositionAndRotation(element.position, element.rotation);
+
+            // 태그를 달고있다면 빌드 정보 등록
+            if (clone.TryGetComponent(out NavMeshSourceTag tag))
+            {
+                buildSources.Add(tag.GetBuildSource());
+            }
+        }
+
+        // 기존 Agents 정보 가져오기
+        NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(0);
+
+        // 데이터 생성
+        // 사이즈는 임시로 지정했음
+        Debug.LogWarning("임시로 지정한 NavMeshBuild 사이즈 사용중");
+        NavMeshData data = NavMeshBuilder.BuildNavMeshData(settings, buildSources, new Bounds(Vector3.forward * 5f, Vector3.one * 10f), transform.position, transform.rotation);
+        
+        NavMesh.AddNavMeshData(data);
+
 
         exit = new GameObject("Exit");
         exit.transform.parent = this.transform;
@@ -20,9 +48,12 @@ public class Room : MonoBehaviour
 
         elements = new GameObject("Elements");
         elements.transform.parent = this.transform;
-        foreach (var element in roomData.elements)
+        elements.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+        foreach (var element in roomData.units)
         {
-            Instantiate(element.prefab, element.position, element.rotation, this.elements.transform);
+            var clone = Instantiate(element.prefab, this.elements.transform);
+            clone.transform.SetLocalPositionAndRotation(element.position, element.rotation);
         }
     }
 
