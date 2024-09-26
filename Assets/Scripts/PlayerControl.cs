@@ -8,16 +8,19 @@ using UnityEngine.InputSystem;
 public class PlayerControl : MonoBehaviour
 {
     private NavMeshAgent agent;
+    private PlayerModel model;
     private PlayerInput input;
     private InputAction cursorAction;
     private LayerMask groundMask;
 
     private Vector2 moveInput;
-    [SerializeField] Transform lookAtMarker;
+    [SerializeField] Transform cursorMarker;
+    [SerializeField] bool isLookCursor;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        model = GetComponent<PlayerModel>();
         input = GetComponent<PlayerInput>();
         groundMask = LayerMask.GetMask("Ground");
     }
@@ -46,16 +49,20 @@ public class PlayerControl : MonoBehaviour
 
         if (Physics.Raycast(clickRay, out RaycastHit hitInfo, 50f, groundMask))
         {
-            lookAtMarker.position = hitInfo.point;
-            Vector3 LookDirection = hitInfo.point - transform.position;
-            LookDirection.y = 0;
-            transform.rotation = Quaternion.LookRotation(LookDirection); // 커서 위치를 향해 회전
+            cursorMarker.position = hitInfo.point;
+            if (isLookCursor)
+            {
+                Vector3 LookDirection = hitInfo.point - transform.position;
+                LookDirection.y = 0;
+                transform.rotation = Quaternion.LookRotation(LookDirection); // 커서 위치를 향해 회전
+            }
         }
     }
 
     private void ReadMoveInput(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        model.IsMoving = context.performed;
     }
 
     private void Movement()
@@ -69,6 +76,14 @@ public class PlayerControl : MonoBehaviour
         moveAxisX.Normalize();
         moveAxisY.Normalize();
 
-        agent.Move(Time.deltaTime * agent.speed * (moveAxisX * moveInput.x + moveAxisY * moveInput.y));
+        Vector3 velocity = model.MoveSpeed * (moveAxisX * moveInput.x + moveAxisY * moveInput.y);
+        agent.Move(Time.deltaTime * velocity);
+
+        if (!isLookCursor)
+        {
+            transform.rotation = Quaternion.LookRotation(velocity); // 이동 방향을 향해 회전
+        }
+
+        model.LocalVelocity = transform.worldToLocalMatrix * velocity;
     }
 }
