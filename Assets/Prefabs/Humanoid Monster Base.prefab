@@ -465,7 +465,7 @@ Animator:
   m_GameObject: {fileID: 3701388333078776260}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 41f081d5c6d286c47a33bed3f84de79a, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0d99a572f2a92b24b90f516570066aaf, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -486,7 +486,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -510,7 +510,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc564d55c3b1ad748831dd75b0f314f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sampleProjectile: {fileID: 0}
   detectRange: 8
+  sqrChaseRange: 144
+  attackRange: 5
   currentState: 0
 --- !u!1 &3748897916328362550
 GameObject:

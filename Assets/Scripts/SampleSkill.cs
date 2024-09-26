@@ -11,7 +11,7 @@ public class SampleSkill : MonoBehaviour
         body = GetComponent<Rigidbody>();
     }
 
-    public void Init(PlayerModel source)
+    public void Init()
     {
         body.velocity = transform.forward * 5f;
         Destroy(gameObject, 5f);
@@ -19,8 +19,7 @@ public class SampleSkill : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter");
-
+        Debug.Log($"OnTriggerEnter: {other.name}");
     }
 
 }

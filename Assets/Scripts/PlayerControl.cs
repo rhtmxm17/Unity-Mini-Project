@@ -102,17 +102,17 @@ public class PlayerControl : MonoBehaviour
         fireAction.started -= CastEnter;
 
         isLookCursor = true;
-        StartCoroutine(Cast());
+        StartCoroutine(CastSkill());
         model.TriggerAttack();
     }
 
-    private IEnumerator Cast()
+    private IEnumerator CastSkill()
     {
         yield return new WaitForSeconds(0.5f);
         
         fireAction.started += CastEnter;
         var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
-        projectile.Init(model);
+        projectile.Init();
 
         isLookCursor = false;
     }
