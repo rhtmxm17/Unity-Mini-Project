@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
-public class HumanoidMonster : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
+public class HumanoidMonster : MonoBehaviour, IDamageable
 {
-    private enum State { Idle, Chase, Attack }
+    private enum State { Idle, Chase, Attack, Die }
 
     // TODO: 몬스터 생성시 공유 데이터 참조만 복사
     private class Shared
@@ -24,6 +24,8 @@ public class HumanoidMonster : MonoBehaviour
     [SerializeField] float sqrChaseRange = 12f * 12f;
     [SerializeField] float attackRange = 5f;
 
+    [SerializeField] float hp = 10f;
+
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -32,6 +34,22 @@ public class HumanoidMonster : MonoBehaviour
 
     private Coroutine currentRoutine;
     private Collider[] detected = new Collider[1];
+
+    #region IDamageable
+    public IDamageable.Flag HitFlag => IDamageable.Flag.Monster;
+    public void TakeDamage(float damage)
+    {
+        hp -= damage;
+        if (hp <= 0f)
+        {
+            currentState = State.Die;
+            animator.SetTrigger("Die");
+            StopCoroutine(currentRoutine);
+            agent.destination = transform.position;
+            Destroy(gameObject, 2f);
+        }
+    }
+    #endregion IDamageable
 
     private void Awake()
     {
@@ -77,7 +95,6 @@ public class HumanoidMonster : MonoBehaviour
         while (true)
         {
             Vector3 distanceVector = detected[0].transform.position - transform.position;
-            Ray attackRay = new(transform.position, distanceVector);
 
             // 추적 한계 거리
             if (distanceVector.sqrMagnitude > sqrChaseRange)
@@ -91,14 +108,10 @@ public class HumanoidMonster : MonoBehaviour
                 yield return null;
             }
 
-            // 공격 발사 가능여부 판단
-            bool hitted = Physics.Raycast(attackRay, out RaycastHit info, attackRange, shared.hitableLayerMask);
-            Debug.DrawRay(attackRay.origin, attackRay.direction * attackRange, Color.yellow, 0.5f);
 
-            if (hitted && info.collider.gameObject.layer == shared.playerLayerIndex)
+            if (AttackCheck())
             {
                 currentState = State.Attack;
-                animator.SetTrigger("Attack");
                 StopCoroutine(currentRoutine);
                 currentRoutine = StartCoroutine(AttackRoutine());
                 agent.destination = transform.position;
@@ -115,15 +128,31 @@ public class HumanoidMonster : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         // 몬스터도 스킬 형태로 부착하기?
+        do
+        {
+            animator.SetTrigger("Attack");
+            yield return new WaitForSeconds(1f);
 
-        yield return new WaitForSeconds(1f);
-
-        var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
-        projectile.Init();
+            var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
+            projectile.Init();
+            projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Player;
+        } while (AttackCheck());
 
         currentState = State.Chase;
         animator.SetTrigger("Walk");
         StopCoroutine(currentRoutine);
         currentRoutine = StartCoroutine(ChasePlayerRoutine());
+    }
+
+    private bool AttackCheck()
+    {
+        Vector3 distanceVector = detected[0].transform.position - transform.position;
+        Ray attackRay = new(transform.position, distanceVector);
+
+        // 공격 발사 가능여부 판단
+        bool hitted = Physics.Raycast(attackRay, out RaycastHit info, attackRange, shared.hitableLayerMask);
+        Debug.DrawRay(attackRay.origin, attackRay.direction * attackRange, Color.yellow, 0.5f);
+
+        return (hitted && info.collider.gameObject.layer == shared.playerLayerIndex);
     }
 }

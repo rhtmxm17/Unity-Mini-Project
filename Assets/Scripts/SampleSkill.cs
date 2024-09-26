@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SampleSkill : MonoBehaviour
 {
+    public IDamageable.Flag hitMask;
+
     private Rigidbody body;
 
     private void Awake()
@@ -19,7 +22,12 @@ public class SampleSkill : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"OnTriggerEnter: {other.name}");
+        if (other.gameObject.TryGetComponent(out IDamageable target) && hitMask.HasFlag(target.HitFlag))
+        {
+            Debug.Log($"OnTriggerEnter: {other.name}");
+            target.TakeDamage(5f);
+            Destroy(gameObject);
+        }
     }
 
 }

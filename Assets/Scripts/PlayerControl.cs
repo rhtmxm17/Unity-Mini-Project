@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(PlayerInput))]
-public class PlayerControl : MonoBehaviour
+public class PlayerControl : MonoBehaviour, IDamageable
 {
     [SerializeField] Transform cursorMarker;
     [SerializeField] SampleSkill sampleProjectile;
@@ -20,6 +20,14 @@ public class PlayerControl : MonoBehaviour
 
     private Vector2 moveInput;
     private bool isLookCursor;
+
+    #region IDamageable
+    public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
+    public void TakeDamage(float damage)
+    {
+        Debug.Log($"피격 데미지: {damage}");
+    }
+    #endregion IDamageable
 
     private void Awake()
     {
@@ -113,7 +121,9 @@ public class PlayerControl : MonoBehaviour
         fireAction.started += CastEnter;
         var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
         projectile.Init();
+        projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Monster;
 
         isLookCursor = false;
     }
+
 }

@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 2928452562873493546}
   - component: {fileID: 3729594355163789498}
   - component: {fileID: 2296991266883292841}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Projectile Sample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d1e0a390c148e8429acbdd257c6475b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitMask: 0
 --- !u!135 &2296991266883292841
 SphereCollider:
   m_ObjectHideFlags: 0
