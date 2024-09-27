@@ -9,22 +9,29 @@ using UnityEngine.InputSystem;
 public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 {
     public event UnityAction OnDie;
+    public float Hp { get { Debug.LogWarning("Not Implimented"); return 0; } }
 
     [SerializeField] Transform cursorMarker;
     [SerializeField] SampleSkill sampleProjectile;
 
+    private enum State { Idle, Move, Attack, _COUNT }
+
     private NavMeshAgent agent;
     private PlayerModel model;
-    private PlayerInput input;
 
+    private PlayerInput input;
     private InputAction cursorAction;
     private InputAction fireAction;
+    private InputAction moveAction;
+
     private LayerMask groundMask;
 
-    private Vector2 moveInput;
     private bool isLookCursor;
 
-    public float Hp { get { Debug.LogWarning("Not Implimented"); return 0; } }
+    [SerializeField] // 검사용
+    private State currentState = State.Idle;
+    private StateBase[] states = new StateBase[(int)State._COUNT];
+    private Coroutine stateRoutine;
 
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
@@ -42,6 +49,10 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         model = GetComponent<PlayerModel>();
         input = GetComponent<PlayerInput>();
         groundMask = LayerMask.GetMask("Ground");
+
+        states[(int)State.Idle] = new IdleState(this);
+        states[(int)State.Move] = new MoveState(this);
+        states[(int)State.Attack] = new AttackState(this);
     }
 
     private void Start()
@@ -50,19 +61,23 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             input.camera = Camera.main;
         cursorAction = input.actions["Point"];
 
-        InputAction moveAction = input.actions["Move"];
-        moveAction.performed += ReadMoveInput;
-        moveAction.canceled += ReadMoveInput;
-
+        moveAction = input.actions["Move"];
         fireAction = input.actions["Fire"];
-        fireAction.started += CastEnter;
+
+        states[(int)currentState].Enter();
     }
 
+    private void ChangeState(State state)
+    {
+        states[(int)currentState].Exit();
+        currentState = state;
+        states[(int)currentState].Enter();
+    }
 
     private void Update()
     {
+        // 상태와 무관하게 항상 작동하는 작업
         LookAtMouse();
-        Movement();
     }
 
     private void LookAtMouse()
@@ -82,41 +97,10 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         }
     }
 
-    private void ReadMoveInput(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-        model.IsMoving = context.performed;
-    }
-
-    private void Movement()
-    {
-        // 카메라의 up, right를 xz평면에서의 이동 방향으로 변환
-        Vector3 moveAxisX = input.camera.transform.right;
-        Vector3 moveAxisY = input.camera.transform.up;
-
-        moveAxisX.y = 0f;
-        moveAxisY.y = 0f;
-
-        moveAxisX.Normalize();
-        moveAxisY.Normalize();
-
-        Vector3 velocity = model.MoveSpeed * (moveAxisX * moveInput.x + moveAxisY * moveInput.y);
-        agent.Move(Time.deltaTime * velocity);
-
-        if ((!isLookCursor) && model.IsMoving)
-        {
-            transform.rotation = Quaternion.LookRotation(velocity); // 이동 방향을 향해 회전
-        }
-
-        model.LocalVelocity = transform.worldToLocalMatrix * velocity;
-    }
-
     private void CastEnter(InputAction.CallbackContext context)
     {
-        // 공격 입력 비활성화
-        fireAction.started -= CastEnter;
+        ChangeState(State.Attack);
 
-        isLookCursor = true;
         StartCoroutine(CastSkill());
         model.TriggerAttack();
     }
@@ -134,4 +118,150 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         isLookCursor = false;
     }
 
+    private class IdleState : StateBase
+    {
+        private readonly PlayerControl self;
+
+        public IdleState(PlayerControl self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.model.LocalVelocity = Vector3.zero;
+            self.isLookCursor = true;
+
+            self.moveAction.started += ReadMoveInput; // Idle -> Move
+            self.fireAction.started += self.CastEnter; // Idle -> Attack
+        }
+
+        public override void Exit()
+        {
+            self.moveAction.started -= ReadMoveInput;
+            self.fireAction.started -= self.CastEnter;
+        }
+
+        private void ReadMoveInput(InputAction.CallbackContext context)
+        {
+            self.model.IsMoving = true;
+            self.ChangeState(State.Move);
+        }
+    }
+
+    private class MoveState : StateBase
+    {
+        private readonly PlayerControl self;
+        private Vector2 moveInput;
+
+        public MoveState(PlayerControl self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            moveInput = self.moveAction.ReadValue<Vector2>();
+            self.moveAction.performed += ReadMoveValue;
+            self.isLookCursor = false;
+            self.stateRoutine = self.StartCoroutine(MovementRoutine());
+
+            self.moveAction.canceled += ReadMoveInputCancled; // Move -> Idle
+            self.fireAction.started += self.CastEnter; // Move -> Attack
+        }
+
+        public override void Exit()
+        {
+            self.moveAction.performed -= ReadMoveValue;
+            self.moveAction.canceled -= ReadMoveInputCancled;
+            self.fireAction.started -= self.CastEnter;
+            self.StopCoroutine(self.stateRoutine);
+        }
+
+        private void ReadMoveValue(InputAction.CallbackContext context)
+        {
+            moveInput = context.ReadValue<Vector2>();
+        }
+
+        private void ReadMoveInputCancled(InputAction.CallbackContext context)
+        {
+            self.model.IsMoving = false;
+            self.ChangeState(State.Idle);
+        }
+
+        private IEnumerator MovementRoutine()
+        {
+            while (true)
+            {
+                // 카메라의 up, right를 xz평면에서의 이동 방향으로 변환
+                Vector3 moveAxisX = Camera.main.transform.right;
+                Vector3 moveAxisY = Camera.main.transform.up;
+
+                moveAxisX.y = 0f;
+                moveAxisY.y = 0f;
+
+                moveAxisX.Normalize();
+                moveAxisY.Normalize();
+
+                // 입력 방향과 속도 능력치를 적용
+                Vector3 velocity = self.model.MoveSpeed * (moveAxisX * moveInput.x + moveAxisY * moveInput.y);
+                self.agent.Move(Time.deltaTime * velocity);
+
+                self.transform.rotation = Quaternion.LookRotation(velocity); // 이동 방향을 향해 회전
+
+                self.model.LocalVelocity = self.transform.worldToLocalMatrix * velocity;
+
+                yield return null;
+            }
+        }
+    }
+
+    private class AttackState : StateBase
+    {
+        private readonly PlayerControl self;
+
+        public AttackState(PlayerControl self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.isLookCursor = true;
+            self.model.TriggerAttack();
+            self.stateRoutine = self.StartCoroutine(CastSkill());
+        }
+
+        public override void Exit()
+        {
+            self.StopCoroutine(self.stateRoutine);
+        }
+
+        private IEnumerator CastSkill()
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            self.isLookCursor = false;
+
+            yield return new WaitForSeconds(0.4f);
+
+            // TODO: skill.Perform();
+            {
+                var projectile = Instantiate(self.sampleProjectile, self.transform.position, self.transform.rotation);
+                projectile.Init();
+                projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Monster;
+                projectile.source = self;
+            }
+
+            // 공격 버튼을 누른채라면 반복
+            if (self.fireAction.inProgress)
+            {
+                Enter();
+            }
+            else
+            {
+                self.ChangeState(State.Idle);
+            }
+        }
+    }
 }

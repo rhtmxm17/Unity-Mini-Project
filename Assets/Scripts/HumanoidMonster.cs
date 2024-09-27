@@ -19,13 +19,13 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         }
     }
 
-    private enum State { Idle, Chase, Attack, Die, COUNT }
+    private enum State { Idle, Chase, Attack, Die, _COUNT }
 
     // TODO: 몬스터 생성시 공유 데이터 참조만 복사
     private class Shared
     {
         public readonly LayerMask playerLayerMask = LayerMask.GetMask("Player");
-        public readonly LayerMask hitableLayerMask = LayerMask.GetMask("Player", "Default");
+        public readonly LayerMask hitableLayerMask = LayerMask.GetMask("Player", "Default"); // 스킬 구현시 스킬마다 달라져야 할듯
         public readonly int playerLayerIndex = LayerMask.NameToLayer("Player");
     }
     private Shared shared;
@@ -40,10 +40,8 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     private NavMeshAgent agent;
     private Animator animator;
 
-    [SerializeField] // 확인용
     private State currentState = State.Idle;
-
-    private StateBase[] states = new StateBase[(int)State.COUNT];
+    private StateBase[] states = new StateBase[(int)State._COUNT];
 
     private Coroutine currentRoutine;
     private Transform target;
