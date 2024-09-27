@@ -19,26 +19,18 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         }
     }
 
-
-
-    private enum State { Idle, Chase, Attack, Die }
+    private enum State { Idle, Chase, Attack, Die, COUNT }
 
     // TODO: 몬스터 생성시 공유 데이터 참조만 복사
     private class Shared
     {
-        public readonly YieldInstruction detectPeriod = new WaitForSeconds(1f);
-        public readonly YieldInstruction checkAttackPeriod = new WaitForSeconds(1f);
         public readonly LayerMask playerLayerMask = LayerMask.GetMask("Player");
         public readonly LayerMask hitableLayerMask = LayerMask.GetMask("Player", "Default");
         public readonly int playerLayerIndex = LayerMask.NameToLayer("Player");
     }
     private Shared shared;
 
-    [SerializeField] SampleSkill sampleProjectile;
-    [SerializeField] float detectRange = 10f;
-    [SerializeField] float sqrChaseRange = 12f * 12f;
     [SerializeField] float attackRange = 5f;
-
     [SerializeField] float hp = 10f;
 
     private NavMeshAgent agent;
@@ -47,8 +39,10 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     [SerializeField] // 확인용
     private State currentState = State.Idle;
 
+    private StateBase[] states = new StateBase[(int)State.COUNT];
+
     private Coroutine currentRoutine;
-    private Collider[] detected = new Collider[1];
+    private Transform target;
 
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Monster;
@@ -64,114 +58,197 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        OnDie = Die;
+        OnDie = () => { ChangeState(State.Die); };
+
+        states[(int)State.Idle] = new IdleState(this);
+        states[(int)State.Chase] = new ChaseState(this);
+        states[(int)State.Attack] = new AttackState(this);
+        states[(int)State.Die] = new DieState(this);
     }
 
     private void Start()
     {
-        currentRoutine = StartCoroutine(DetectPlayerRoutine());
+        currentState = State.Idle;
+        states[(int)State.Idle].Enter();
     }
 
-    private void OnDrawGizmosSelected()
+    private void ChangeState(State state)
     {
-        switch(currentState)
-        {
-            case State.Idle:
-                Gizmos.DrawWireSphere(transform.position, detectRange);
-                break;
-        }
+        states[(int)currentState].Exit();
+        currentState = state;
+        states[(int)currentState].Enter();
     }
 
-    private IEnumerator DetectPlayerRoutine()
+    private bool AttackCheckAndLook()
     {
-        while (true)
-        {
-            if (0 < Physics.OverlapSphereNonAlloc(transform.position, detectRange, detected, shared.playerLayerMask))
-            {
-                currentState = State.Chase;
-                animator.SetTrigger("Walk");
-                StopCoroutine(currentRoutine);
-                currentRoutine = StartCoroutine(ChasePlayerRoutine());
-                agent.destination = detected[0].transform.position;
-            }
-
-            yield return shared.detectPeriod;
-        }
-    }
-
-    private IEnumerator ChasePlayerRoutine()
-    {
-        while (true)
-        {
-            Vector3 distanceVector = detected[0].transform.position - transform.position;
-
-            // 추적 한계 거리
-            if (distanceVector.sqrMagnitude > sqrChaseRange)
-            {
-                currentState = State.Idle;
-                animator.SetTrigger("Idle");
-                StopCoroutine(currentRoutine);
-                currentRoutine = StartCoroutine(DetectPlayerRoutine());
-                agent.destination = transform.position;
-
-                yield return null;
-            }
-
-
-            if (AttackCheck())
-            {
-                currentState = State.Attack;
-                StopCoroutine(currentRoutine);
-                currentRoutine = StartCoroutine(AttackRoutine());
-                agent.destination = transform.position;
-            }
-            else
-            {
-                agent.destination = detected[0].transform.position;
-            }
-
-            yield return shared.checkAttackPeriod;
-        }
-    }
-
-    private IEnumerator AttackRoutine()
-    {
-        // 몬스터도 스킬 형태로 부착하기?
-        do
-        {
-            animator.SetTrigger("Attack");
-            yield return new WaitForSeconds(1f);
-
-            var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
-            projectile.Init();
-            projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Player;
-        } while (AttackCheck());
-
-        currentState = State.Chase;
-        animator.SetTrigger("Walk");
-        StopCoroutine(currentRoutine);
-        currentRoutine = StartCoroutine(ChasePlayerRoutine());
-    }
-
-    private bool AttackCheck()
-    {
-        Vector3 distanceVector = detected[0].transform.position - transform.position;
+        Vector3 distanceVector = target.transform.position - transform.position;
         Ray attackRay = new(transform.position, distanceVector);
 
         // 공격 발사 가능여부 판단
         bool hitted = Physics.Raycast(attackRay, out RaycastHit info, attackRange, shared.hitableLayerMask);
         Debug.DrawRay(attackRay.origin, attackRay.direction * attackRange, Color.yellow, 0.5f);
 
-        return (hitted && info.collider.gameObject.layer == shared.playerLayerIndex);
+        bool result = (hitted && info.collider.gameObject.layer == shared.playerLayerIndex);
 
+        transform.LookAt(target);
+
+        return result;
     }
 
-    private void Die()
+    [System.Serializable]
+    private class IdleState : StateBase
     {
-        currentState = State.Die;
-        animator.SetTrigger("Die");
-        StopCoroutine(currentRoutine);
-        agent.destination = transform.position;
-        Destroy(gameObject, 2f);
+        private readonly HumanoidMonster self;
+        public YieldInstruction detectPeriod = new WaitForSeconds(1f);
+        private Collider[] detected = new Collider[1];
+
+        [SerializeField] float detectRange = 10f;
+
+        public IdleState(HumanoidMonster self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.animator.SetTrigger("Idle");
+            self.currentRoutine = self.StartCoroutine(DetectPlayerRoutine());
+            self.agent.isStopped = true;
+        }
+
+        public override void Exit()
+        {
+            self.StopCoroutine(self.currentRoutine);
+        }
+
+        private IEnumerator DetectPlayerRoutine()
+        {
+            while (true)
+            {
+                if (0 < Physics.OverlapSphereNonAlloc(self.transform.position, detectRange, detected, self.shared.playerLayerMask))
+                {
+                    self.target = detected[0].transform;
+                    self.ChangeState(State.Chase);
+                }
+
+                yield return detectPeriod;
+            }
+        }
+    }
+
+    [System.Serializable]
+    private class ChaseState : StateBase
+    {
+        private readonly HumanoidMonster self;
+        public YieldInstruction checkAttackPeriod = new WaitForSeconds(1f);
+
+        [SerializeField] float sqrChaseRange = 12f * 12f;
+
+        public ChaseState(HumanoidMonster self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.animator.SetTrigger("Walk");
+            self.currentRoutine = self.StartCoroutine(ChasePlayerRoutine());
+            self.agent.isStopped = false;
+        }
+
+        public override void Exit()
+        {
+            self.StopCoroutine(self.currentRoutine);
+        }
+
+        private IEnumerator ChasePlayerRoutine()
+        {
+            while (true)
+            {
+                Vector3 distanceVector = self.target.transform.position - self.transform.position;
+
+                // 추적 한계 거리
+                if (distanceVector.sqrMagnitude > sqrChaseRange)
+                {
+                    self.ChangeState(State.Idle);
+
+                    yield return null;
+                }
+
+
+                if (self.AttackCheckAndLook())
+                {
+                    self.ChangeState(State.Attack);
+                }
+                else
+                {
+                    self.agent.destination = self.target.transform.position;
+                }
+
+                yield return checkAttackPeriod;
+            }
+        }
+    }
+
+    [System.Serializable]
+    private class AttackState : StateBase
+    {
+        private readonly HumanoidMonster self;
+        public YieldInstruction attackPeriod = new WaitForSeconds(1f);
+
+        [SerializeField] SampleSkill sampleProjectile;
+
+        public AttackState(HumanoidMonster self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.currentRoutine = self.StartCoroutine(AttackRoutine());
+            self.agent.isStopped = true;
+        }
+
+        public override void Exit()
+        {
+            self.StopCoroutine(self.currentRoutine);
+        }
+
+        private IEnumerator AttackRoutine()
+        {
+            do
+            {
+                self.animator.SetTrigger("Attack");
+                yield return attackPeriod;
+
+                var projectile = Instantiate(sampleProjectile, self.transform.position, self.transform.rotation);
+                projectile.Init();
+                projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Player;
+            } while (self.AttackCheckAndLook());
+
+            self.ChangeState(State.Chase);
+        }
+    }
+
+    private class DieState : StateBase
+    {
+        private readonly HumanoidMonster self;
+
+        public DieState(HumanoidMonster self)
+        {
+            this.self = self;
+        }
+
+        public override void Enter()
+        {
+            self.animator.SetTrigger("Die");
+            self.agent.isStopped = true;
+            Destroy(self.gameObject, 2f);
+        }
+
+        public override void Exit()
+        {
+            Debug.LogError("몬스터가 Die 상태를 벗어남");
+        }
     }
 }

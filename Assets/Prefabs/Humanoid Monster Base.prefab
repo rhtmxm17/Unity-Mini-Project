@@ -511,11 +511,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc564d55c3b1ad748831dd75b0f314f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sampleProjectile: {fileID: 0}
-  detectRange: 8
-  sqrChaseRange: 144
   attackRange: 5
   hp: 10
+  idleField:
+    detectRange: 10
+  chaseField:
+    sqrChaseRange: 144
+  attackField:
+    sampleProjectile: {fileID: 3729594355163789498, guid: f7bd48b97dd072c4c98b94e3fe999ac4,
+      type: 3}
   currentState: 0
 --- !u!136 &4012746869955963927
 CapsuleCollider:
