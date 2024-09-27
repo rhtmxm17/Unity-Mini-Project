@@ -8,6 +8,8 @@ public class NavMeshBuildData : ScriptableObject
     [SerializeField] private NavMeshBuildSourceShape shape;
     [SerializeField, Tooltip("shape가 기본 도형/ModifierBox일 경우 사용")] private Vector3 size = Vector3.one;
 
+    public NavMeshBuildSourceShape Shape { get => shape; }
+
     public NavMeshBuildSource GetBuildSource(Transform sourceTransform)
     {
         return new NavMeshBuildSource()

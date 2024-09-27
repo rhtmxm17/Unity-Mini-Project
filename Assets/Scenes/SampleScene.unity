@@ -122,6 +122,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 2b4aa7485ed03f84d95c3da776abb94d, type: 2}
+--- !u!1 &215938884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 215938886}
+  - component: {fileID: 215938885}
+  m_Layer: 0
+  m_Name: Nav Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &215938885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215938884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25252b9ede38264d886af713aa7d86c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navMeshSourcesOnEditor:
+  - {fileID: 539370860}
+  - {fileID: 2023205719}
+  - {fileID: 323148492}
+  - {fileID: 1688231973}
+  - {fileID: 1147825933}
+  - {fileID: 1070442619}
+  - {fileID: 1148192985}
+--- !u!4 &215938886
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215938884}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &323148487
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,12 +185,13 @@ GameObject:
   - component: {fileID: 323148488}
   - component: {fileID: 323148491}
   - component: {fileID: 323148490}
+  - component: {fileID: 323148492}
   m_Layer: 0
   m_Name: Plane (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &323148488
 Transform:
@@ -205,6 +258,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323148487}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &323148492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323148487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,12 +648,13 @@ GameObject:
   - component: {fileID: 539370857}
   - component: {fileID: 539370856}
   - component: {fileID: 539370859}
+  - component: {fileID: 539370860}
   m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &539370855
 Transform:
@@ -679,6 +747,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a20b5720454cd49ad1d4aa2c114626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &539370860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539370854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1001 &539596862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1079,12 +1161,13 @@ GameObject:
   - component: {fileID: 1070442616}
   - component: {fileID: 1070442618}
   - component: {fileID: 1070442617}
+  - component: {fileID: 1070442619}
   m_Layer: 0
   m_Name: Plane (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1070442616
 Transform:
@@ -1151,6 +1234,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1070442615}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1070442619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070442615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1 &1091402274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1262,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1091402275
 Transform:
@@ -1200,12 +1297,13 @@ GameObject:
   - component: {fileID: 1147825930}
   - component: {fileID: 1147825932}
   - component: {fileID: 1147825931}
+  - component: {fileID: 1147825933}
   m_Layer: 0
   m_Name: Plane (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1147825930
 Transform:
@@ -1272,6 +1370,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147825929}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1147825933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147825929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1 &1148192981
 GameObject:
   m_ObjectHideFlags: 0
@@ -1283,12 +1395,13 @@ GameObject:
   - component: {fileID: 1148192982}
   - component: {fileID: 1148192984}
   - component: {fileID: 1148192983}
+  - component: {fileID: 1148192985}
   m_Layer: 0
   m_Name: Plane (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1148192982
 Transform:
@@ -1355,6 +1468,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148192981}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1148192985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148192981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1 &1688231969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1366,12 +1493,13 @@ GameObject:
   - component: {fileID: 1688231970}
   - component: {fileID: 1688231972}
   - component: {fileID: 1688231971}
+  - component: {fileID: 1688231973}
   m_Layer: 0
   m_Name: Plane (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1688231970
 Transform:
@@ -1438,6 +1566,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688231969}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1688231973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688231969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!4 &1729525271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 713ccdba7a92725428570ec12c8ac217,
@@ -1500,12 +1642,13 @@ GameObject:
   - component: {fileID: 2023205715}
   - component: {fileID: 2023205718}
   - component: {fileID: 2023205717}
+  - component: {fileID: 2023205719}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2023205715
 Transform:
@@ -1572,6 +1715,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023205714}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2023205719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023205714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83f8e132bf61a946909bc8072c074c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedData: {fileID: 11400000, guid: 5790a50c8ac35b847be1a9ab68b7b908, type: 2}
+  meshFilter: {fileID: 0}
 --- !u!1 &2070828059
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,14 @@ public class NavMeshSourceTag : MonoBehaviour
     [SerializeField] private NavMeshBuildData sharedData;
     [SerializeField, Tooltip("shape가 Mesh일 경우 사용")] private MeshFilter meshFilter;
 
+    private void Awake()
+    {
+        if (meshFilter == null && sharedData.Shape == NavMeshBuildSourceShape.Mesh)
+        {
+            meshFilter = GetComponent<MeshFilter>();
+        }
+    }
+
     public NavMeshBuildSource GetBuildSource()
     {
         var source = sharedData.GetBuildSource(transform);
