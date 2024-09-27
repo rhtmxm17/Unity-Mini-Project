@@ -11,6 +11,9 @@ public class Room : MonoBehaviour
     private GameObject elements;
     private GameObject exit;
 
+    [SerializeField] // 확인용
+    private int countUnits;
+
     [ContextMenu("CreateRomm 호출 테스트")]
     public void CreateRomm()
     {
@@ -43,6 +46,11 @@ public class Room : MonoBehaviour
         {
             var clone = Instantiate(element.prefab, this.elements.transform);
             clone.transform.SetLocalPositionAndRotation(element.position, element.rotation);
+            if (clone.TryGetComponent(out IUnit unit))
+            {
+                countUnits++;
+                unit.OnDie += () => { countUnits--; };
+            }
         }
     }
 

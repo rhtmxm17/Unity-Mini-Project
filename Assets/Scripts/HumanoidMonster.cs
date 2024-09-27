@@ -2,10 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-public class HumanoidMonster : MonoBehaviour, IDamageable
+public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 {
+    public event UnityAction OnDie;
+    public float Hp
+    {
+        get => hp;
+        private set
+        {
+            hp = value;
+            if (hp <= 0f)
+                OnDie?.Invoke();
+        }
+    }
+
+
+
     private enum State { Idle, Chase, Attack, Die }
 
     // TODO: 몬스터 생성시 공유 데이터 참조만 복사
@@ -39,15 +54,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Monster;
     public void TakeDamage(float damage)
     {
-        hp -= damage;
-        if (hp <= 0f)
-        {
-            currentState = State.Die;
-            animator.SetTrigger("Die");
-            StopCoroutine(currentRoutine);
-            agent.destination = transform.position;
-            Destroy(gameObject, 2f);
-        }
+        Hp -= damage;
     }
     #endregion IDamageable
 
@@ -56,6 +63,8 @@ public class HumanoidMonster : MonoBehaviour, IDamageable
         shared = new();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+        OnDie = Die;
     }
 
     private void Start()
@@ -154,5 +163,15 @@ public class HumanoidMonster : MonoBehaviour, IDamageable
         Debug.DrawRay(attackRay.origin, attackRay.direction * attackRange, Color.yellow, 0.5f);
 
         return (hitted && info.collider.gameObject.layer == shared.playerLayerIndex);
+
+    }
+
+    private void Die()
+    {
+        currentState = State.Die;
+        animator.SetTrigger("Die");
+        StopCoroutine(currentRoutine);
+        agent.destination = transform.position;
+        Destroy(gameObject, 2f);
     }
 }
