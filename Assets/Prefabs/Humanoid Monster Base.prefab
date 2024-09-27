@@ -513,13 +513,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 5
   hp: 10
-  idleField:
-    detectRange: 10
-  chaseField:
-    sqrChaseRange: 144
-  attackField:
-    sampleProjectile: {fileID: 3729594355163789498, guid: f7bd48b97dd072c4c98b94e3fe999ac4,
-      type: 3}
+  detectRange: 10
+  sqrChaseRange: 400
+  sampleProjectile: {fileID: 3729594355163789498, guid: f7bd48b97dd072c4c98b94e3fe999ac4,
+    type: 3}
   currentState: 0
 --- !u!136 &4012746869955963927
 CapsuleCollider:

@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(PlayerInput))]
-public class PlayerControl : MonoBehaviour, IDamageable
+public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 {
+    public event UnityAction OnDie;
+
     [SerializeField] Transform cursorMarker;
     [SerializeField] SampleSkill sampleProjectile;
 
@@ -21,9 +24,13 @@ public class PlayerControl : MonoBehaviour, IDamageable
     private Vector2 moveInput;
     private bool isLookCursor;
 
+    public float Hp { get { Debug.LogWarning("Not Implimented"); return 0; } }
+
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
-    public void TakeDamage(float damage)
+
+
+    public void TakeDamage(float damage, IUnit source = null)
     {
         Debug.Log($"피격 데미지: {damage}");
     }
@@ -122,6 +129,7 @@ public class PlayerControl : MonoBehaviour, IDamageable
         var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
         projectile.Init();
         projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Monster;
+        projectile.source = this;
 
         isLookCursor = false;
     }

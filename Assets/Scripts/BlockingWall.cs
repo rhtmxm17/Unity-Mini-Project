@@ -6,5 +6,5 @@ public class BlockingWall : MonoBehaviour, IDamageable
 {
     public IDamageable.Flag HitFlag { get => IDamageable.Flag.Wall; }
 
-    public void TakeDamage(float damage) { }
+    public void TakeDamage(float damage, IUnit source) { }
 }

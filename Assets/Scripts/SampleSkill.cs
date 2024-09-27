@@ -6,6 +6,7 @@ using UnityEngine;
 public class SampleSkill : MonoBehaviour
 {
     public IDamageable.Flag hitMask;
+    public IUnit source;
 
     private Rigidbody body;
 
@@ -25,7 +26,7 @@ public class SampleSkill : MonoBehaviour
         if (other.gameObject.TryGetComponent(out IDamageable target) && hitMask.HasFlag(target.HitFlag))
         {
             Debug.Log($"OnTriggerEnter: {other.name}");
-            target.TakeDamage(5f);
+            target.TakeDamage(5f, source);
             Destroy(gameObject);
         }
     }

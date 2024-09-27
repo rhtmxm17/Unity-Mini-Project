@@ -8,6 +8,7 @@ public interface IDamageable
     [System.Flags]
     public enum Flag
     {
+        Disable = 0,
         Wall    = 1 << 0,
         Player  = 1 << 1,
         Monster = 1 << 2,
@@ -15,5 +16,5 @@ public interface IDamageable
 
     public Flag HitFlag { get; }
 
-    public void TakeDamage(float damage);
+    public void TakeDamage(float damage, IUnit source = null);
 }

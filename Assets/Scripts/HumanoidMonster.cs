@@ -33,6 +33,10 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     [SerializeField] float attackRange = 5f;
     [SerializeField] float hp = 10f;
 
+    [SerializeField] float detectRange = 10f;
+    [SerializeField] float sqrChaseRange = 12f * 12f;
+    [SerializeField] SampleSkill sampleProjectile;
+
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -46,9 +50,14 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Monster;
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, IUnit source = null)
     {
         Hp -= damage;
+        if (currentState == State.Idle && source != null)
+        {
+            target = source.gameObject.transform;
+            ChangeState(State.Chase);
+        }
     }
     #endregion IDamageable
 
@@ -95,14 +104,12 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         return result;
     }
 
-    [System.Serializable]
     private class IdleState : StateBase
     {
         private readonly HumanoidMonster self;
         public YieldInstruction detectPeriod = new WaitForSeconds(1f);
         private Collider[] detected = new Collider[1];
 
-        [SerializeField] float detectRange = 10f;
 
         public IdleState(HumanoidMonster self)
         {
@@ -125,7 +132,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         {
             while (true)
             {
-                if (0 < Physics.OverlapSphereNonAlloc(self.transform.position, detectRange, detected, self.shared.playerLayerMask))
+                if (0 < Physics.OverlapSphereNonAlloc(self.transform.position, self.detectRange, detected, self.shared.playerLayerMask))
                 {
                     self.target = detected[0].transform;
                     self.ChangeState(State.Chase);
@@ -136,13 +143,11 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         }
     }
 
-    [System.Serializable]
     private class ChaseState : StateBase
     {
         private readonly HumanoidMonster self;
         public YieldInstruction checkAttackPeriod = new WaitForSeconds(1f);
 
-        [SerializeField] float sqrChaseRange = 12f * 12f;
 
         public ChaseState(HumanoidMonster self)
         {
@@ -168,7 +173,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
                 Vector3 distanceVector = self.target.transform.position - self.transform.position;
 
                 // 추적 한계 거리
-                if (distanceVector.sqrMagnitude > sqrChaseRange)
+                if (distanceVector.sqrMagnitude > self.sqrChaseRange)
                 {
                     self.ChangeState(State.Idle);
 
@@ -190,13 +195,11 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         }
     }
 
-    [System.Serializable]
     private class AttackState : StateBase
     {
         private readonly HumanoidMonster self;
         public YieldInstruction attackPeriod = new WaitForSeconds(1f);
 
-        [SerializeField] SampleSkill sampleProjectile;
 
         public AttackState(HumanoidMonster self)
         {
@@ -221,7 +224,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
                 self.animator.SetTrigger("Attack");
                 yield return attackPeriod;
 
-                var projectile = Instantiate(sampleProjectile, self.transform.position, self.transform.rotation);
+                var projectile = Instantiate(self.sampleProjectile, self.transform.position, self.transform.rotation);
                 projectile.Init();
                 projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Player;
             } while (self.AttackCheckAndLook());
@@ -242,6 +245,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         public override void Enter()
         {
             self.animator.SetTrigger("Die");
+            self.GetComponent<Collider>().enabled = false;
             self.agent.isStopped = true;
             Destroy(self.gameObject, 2f);
         }
