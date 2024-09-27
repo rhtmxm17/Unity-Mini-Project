@@ -5,6 +5,9 @@ using UnityEngine;
 // 타격 가능(또는 투사체가 가로막히는)
 public interface IDamageable
 {
+    public GameObject gameObject { get; }
+    public Transform transform { get; }
+
     [System.Flags]
     public enum Flag
     {

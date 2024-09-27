@@ -14,6 +14,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     [SerializeField] Transform cursorMarker;
     [SerializeField] SampleSkill sampleProjectile;
 
+    [SerializeField] SkillData skillData;
+
     private enum State { Idle, Move, Attack, _COUNT }
 
     private NavMeshAgent agent;
@@ -32,6 +34,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     private State currentState = State.Idle;
     private StateBase[] states = new StateBase[(int)State._COUNT];
     private Coroutine stateRoutine;
+
+    private Skill currentSkill;
 
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
@@ -53,6 +57,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         states[(int)State.Idle] = new IdleState(this);
         states[(int)State.Move] = new MoveState(this);
         states[(int)State.Attack] = new AttackState(this);
+
+        currentSkill = skillData.BakeSkill(IDamageable.Flag.Monster, this);
     }
 
     private void Start()
@@ -227,14 +233,31 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 
         public override void Enter()
         {
-            self.isLookCursor = true;
+            self.isLookCursor = false;
             self.model.TriggerAttack();
             self.stateRoutine = self.StartCoroutine(CastSkill());
+            return;
+
+            self.currentSkill.OnSkillComplete += CheckSkillLoop;
+            self.StartCoroutine(self.currentSkill.CastSkill());
         }
 
         public override void Exit()
         {
             self.StopCoroutine(self.stateRoutine);
+        }
+
+        private void CheckSkillLoop()
+        {
+            // 공격 버튼을 누른채라면 반복
+            if (self.fireAction.inProgress)
+            {
+                self.StartCoroutine(self.currentSkill.CastSkill());
+            }
+            else
+            {
+                self.ChangeState(State.Idle);
+            }
         }
 
         private IEnumerator CastSkill()

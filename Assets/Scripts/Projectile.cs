@@ -8,4 +8,11 @@ public class Projectile : MonoBehaviour
 {
     public event UnityAction<Collider> OnTriggerEnter;
 
+#if UNITY_EDITOR
+    private void Awake()
+    {
+        if (gameObject.layer != LayerMask.NameToLayer("Projectile"))
+            Debug.LogWarning("투사체 레이어 설정 누락");
+    }
+#endif
 }

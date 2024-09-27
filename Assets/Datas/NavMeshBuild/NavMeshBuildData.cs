@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[CreateAssetMenu(menuName = "ScriptableObject/NavMesh Build Data")]
+[CreateAssetMenu(menuName = "ScriptableObjects/NavMesh Build Data")]
 public class NavMeshBuildData : ScriptableObject
 {
     [SerializeField, Range(0, 31), Tooltip("네비게이션 에리어")] private int area;
