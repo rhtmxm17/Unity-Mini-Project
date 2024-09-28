@@ -2539,6 +2539,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorMarker: {fileID: 0}
   sampleProjectile: {fileID: 0}
+  skillData: {fileID: 11400000, guid: 273888e0488dd634ab0a22c780d2a5de, type: 2}
+  currentState: 0
 --- !u!114 &8316087551770523275
 MonoBehaviour:
   m_ObjectHideFlags: 0

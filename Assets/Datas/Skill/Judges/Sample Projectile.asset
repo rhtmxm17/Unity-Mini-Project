@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33532accf72abcf4d90810620257e9a4, type: 3}
   m_Name: Sample Projectile
   m_EditorClassIdentifier: 
-  hitMask: 0
+  hitMask: 1
   projectilePrefab: {fileID: 0}

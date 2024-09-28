@@ -12,7 +12,6 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     public float Hp { get { Debug.LogWarning("Not Implimented"); return 0; } }
 
     [SerializeField] Transform cursorMarker;
-    [SerializeField] SampleSkill sampleProjectile;
 
     [SerializeField] SkillData skillData;
 
@@ -106,22 +105,6 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     private void CastEnter(InputAction.CallbackContext context)
     {
         ChangeState(State.Attack);
-
-        StartCoroutine(CastSkill());
-        model.TriggerAttack();
-    }
-
-    private IEnumerator CastSkill()
-    {
-        yield return new WaitForSeconds(0.5f);
-        
-        fireAction.started += CastEnter;
-        var projectile = Instantiate(sampleProjectile, transform.position, transform.rotation);
-        projectile.Init();
-        projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Monster;
-        projectile.source = this;
-
-        isLookCursor = false;
     }
 
     private class IdleState : StateBase
@@ -235,15 +218,14 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         {
             self.isLookCursor = false;
             self.model.TriggerAttack();
-            self.stateRoutine = self.StartCoroutine(CastSkill());
-            return;
 
-            self.currentSkill.OnSkillComplete += CheckSkillLoop;
+            self.currentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
             self.StartCoroutine(self.currentSkill.CastSkill());
         }
 
         public override void Exit()
         {
+            self.currentSkill.OnSkillComplete -= CheckSkillLoop;
             self.StopCoroutine(self.stateRoutine);
         }
 
@@ -253,33 +235,6 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             if (self.fireAction.inProgress)
             {
                 self.StartCoroutine(self.currentSkill.CastSkill());
-            }
-            else
-            {
-                self.ChangeState(State.Idle);
-            }
-        }
-
-        private IEnumerator CastSkill()
-        {
-            yield return new WaitForSeconds(0.1f);
-
-            self.isLookCursor = false;
-
-            yield return new WaitForSeconds(0.4f);
-
-            // TODO: skill.Perform();
-            {
-                var projectile = Instantiate(self.sampleProjectile, self.transform.position, self.transform.rotation);
-                projectile.Init();
-                projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Monster;
-                projectile.source = self;
-            }
-
-            // 공격 버튼을 누른채라면 반복
-            if (self.fireAction.inProgress)
-            {
-                Enter();
             }
             else
             {
