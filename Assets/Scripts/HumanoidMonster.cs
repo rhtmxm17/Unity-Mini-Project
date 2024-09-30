@@ -85,6 +85,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
     private void ChangeState(State state)
     {
+        Debug.Log($"{currentState}=>{state}");
         states[(int)currentState].Exit();
         currentState = state;
         states[(int)currentState].Enter();
@@ -132,6 +133,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
         private IEnumerator DetectPlayerRoutine()
         {
+            yield return null;
             while (true)
             {
                 if (0 < Physics.OverlapSphereNonAlloc(self.transform.position, self.detectRange, detected, self.shared.playerLayerMask))
@@ -170,6 +172,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
         private IEnumerator ChasePlayerRoutine()
         {
+            yield return null;
             while (true)
             {
                 Vector3 distanceVector = self.target.transform.position - self.transform.position;
@@ -179,7 +182,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
                 {
                     self.ChangeState(State.Idle);
 
-                    yield return null;
+                    yield break;
                 }
 
 

@@ -11,6 +11,7 @@ public class DefaultSkillEffect : SkillEffectBase
     {
         var clone = CreateInstance<DefaultSkillEffect>();
         clone.source = this.source;
+        clone.baseDamage = this.baseDamage;
         return clone;
     }
 

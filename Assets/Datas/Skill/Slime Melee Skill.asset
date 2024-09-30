@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48aef8612c9253940a9224de7db9a3fd, type: 3}
-  m_Name: Melee Skill
+  m_Name: Slime Melee Skill
   m_EditorClassIdentifier: 
   hitMaskBase: 0
-  preDelay: 0.45
-  postDelay: 0.15
-  judge: {fileID: 11400000, guid: 69db2844b0c8a7142b284d5f4dcd0b81, type: 2}
-  effect: {fileID: 11400000, guid: c3ade3cbd6eb9b744b3b166e0e63c734, type: 2}
+  preDelay: 0.3
+  postDelay: 0.2
+  judge: {fileID: 11400000, guid: 921049f3525d0074ebe7397b71fa149e, type: 2}
+  effect: {fileID: 11400000, guid: 0224f671a85881d438d4f983eee0d86e, type: 2}
