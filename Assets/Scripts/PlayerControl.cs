@@ -13,7 +13,7 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 
     [SerializeField] Transform cursorMarker;
 
-    [SerializeField] SkillData skillData;
+    [SerializeField] SkillData[] skillDatas;
 
     private enum State { Idle, Move, Attack, _COUNT }
 
@@ -29,12 +29,12 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 
     private bool isLookCursor;
 
-    [SerializeField] // 검사용
     private State currentState = State.Idle;
     private StateBase[] states = new StateBase[(int)State._COUNT];
     private Coroutine stateRoutine;
 
-    private Skill currentSkill;
+    private Skill[] skills;
+    private Skill CurrentSkill { get => skills[model.SkillIndex]; }
 
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
@@ -57,7 +57,11 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         states[(int)State.Move] = new MoveState(this);
         states[(int)State.Attack] = new AttackState(this);
 
-        currentSkill = skillData.BakeSkill(IDamageable.Flag.Monster, this);
+        skills = new Skill[skillDatas.Length];
+        for (int i = 0; i < skills.Length; i++)
+        {
+            skills[i] = skillDatas[i].BakeSkill(IDamageable.Flag.Monster, this);
+        }
     }
 
     private void Start()
@@ -68,6 +72,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 
         moveAction = input.actions["Move"];
         fireAction = input.actions["Fire"];
+
+        input.actions["Select"].started += SelectSkill;
 
         states[(int)currentState].Enter();
     }
@@ -85,10 +91,34 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
         LookAtMouse();
     }
 
+    private void SelectSkill(InputAction.CallbackContext context)
+    {
+        // 스킬을 사용중이라면 무효
+        if (currentState == State.Attack)
+            return;
+
+        float axisInput = context.ReadValue<float>();
+        int next = model.SkillIndex;
+        if (axisInput > 0f)
+        {
+            next++;
+            if (next >= skills.Length)
+                next = 0;
+        }
+        else
+        {
+            next--;
+            if (next < 0)
+                next = skills.Length - 1;
+        }
+        model.SkillIndex = next;
+        Debug.Log($"스킬{next} 선택됨");
+    }
+
     private void LookAtMouse()
     {
         Vector2 cursorPoint = cursorAction.ReadValue<Vector2>(); // 커서 위치 받아오기
-        Ray clickRay = input.camera.ScreenPointToRay(cursorPoint); // 카메라를 통해 Ray로 변환
+        Ray clickRay = Camera.main.ScreenPointToRay(cursorPoint); // 카메라를 통해 Ray로 변환
 
         if (Physics.Raycast(clickRay, out RaycastHit hitInfo, 50f, groundMask))
         {
@@ -221,13 +251,13 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             self.StartCoroutine(RotationLock());
             self.model.TriggerAttack();
 
-            self.currentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
-            self.StartCoroutine(self.currentSkill.CastSkill(self.transform));
+            self.CurrentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
+            self.StartCoroutine(self.CurrentSkill.CastSkill(self.transform));
         }
 
         public override void Exit()
         {
-            self.currentSkill.OnSkillComplete -= CheckSkillLoop;
+            self.CurrentSkill.OnSkillComplete -= CheckSkillLoop;
             // self.StopCoroutine(self.stateRoutine);
         }
 
@@ -236,7 +266,7 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             // 공격 버튼을 누른채라면 반복
             if (self.fireAction.inProgress)
             {
-                self.StartCoroutine(self.currentSkill.CastSkill(self.transform));
+                self.StartCoroutine(self.CurrentSkill.CastSkill(self.transform));
                 self.model.TriggerAttack();
             }
             else

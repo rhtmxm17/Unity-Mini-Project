@@ -22,8 +22,7 @@ public class FanShapedSkill : SkillJudgeBase
     public override void Perform(Transform transform)
     {
         int count = Physics.OverlapSphereNonAlloc(transform.position, radius, results, physicsMask);
-        Debug.Log($"감지된 충돌체 : {count}개");
-
+        
         for (int i = 0; i < count; i++)
         {
             float cosAngle = Vector3.Dot(transform.forward, (results[i].transform.position - transform.position).normalized);

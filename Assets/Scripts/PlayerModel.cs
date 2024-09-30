@@ -10,6 +10,7 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] bool isMoving;
     [SerializeField] float moveSpeed;
     [SerializeField] Vector3 localVelocity;
+    [SerializeField] int skillIndex;
 
     // Viewer
     private NavMeshAgent agent;
@@ -34,6 +35,12 @@ public class PlayerModel : MonoBehaviour
         set { localVelocity = value; OnLocalVelocityChanged.Invoke(); }
     }
 
+    public int SkillIndex
+    {
+        get => skillIndex;
+        set { skillIndex = value; OnSkillIndexChanged.Invoke(); }
+    }
+
     public void TriggerAttack()
     {
         animator.SetTrigger(Hash_Attack);
@@ -43,11 +50,13 @@ public class PlayerModel : MonoBehaviour
     public event UnityAction OnMovingChanged;
     public event UnityAction OnMoveSpeedChanged;
     public event UnityAction OnLocalVelocityChanged;
+    public event UnityAction OnSkillIndexChanged;
 
     // Hash
     private static readonly int Hash_VelocityZ = Animator.StringToHash("VelocityZ");
     private static readonly int Hash_IsMoving = Animator.StringToHash("IsMoving");
     private static readonly int Hash_Attack = Animator.StringToHash("Attack");
+    private static readonly int Hash_Switch = Animator.StringToHash("Switch");
 
     private void Awake()
     {
@@ -57,6 +66,7 @@ public class PlayerModel : MonoBehaviour
         OnMovingChanged = PresentMoving;
         OnMoveSpeedChanged = PresentMoveSpeed;
         OnLocalVelocityChanged = PresentLocalVelocity;
+        OnSkillIndexChanged = PresentSkillIndex;
     }
 
     private void PresentMoving()
@@ -72,5 +82,10 @@ public class PlayerModel : MonoBehaviour
     private void PresentLocalVelocity()
     {
         animator.SetFloat(Hash_VelocityZ, localVelocity.z);
+    }
+
+    private void PresentSkillIndex()
+    {
+        animator.SetInteger(Hash_Switch, skillIndex);
     }
 }
