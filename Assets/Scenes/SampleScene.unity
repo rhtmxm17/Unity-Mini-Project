@@ -985,6 +985,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -363060613717776787, guid: d97370dd0ef63494294c8a893671547c,
         type: 3}
+      propertyPath: skillData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6d128d00590a3b14ca3aa294aa0efda5,
+        type: 2}
+    - target: {fileID: -363060613717776787, guid: d97370dd0ef63494294c8a893671547c,
+        type: 3}
       propertyPath: cursorMarker
       value: 
       objectReference: {fileID: 612185280}

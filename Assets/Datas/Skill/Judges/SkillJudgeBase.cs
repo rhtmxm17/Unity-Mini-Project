@@ -9,13 +9,6 @@ public abstract class SkillJudgeBase : ScriptableObject
 
     public IDamageable.Flag hitMask;
 
-    public SkillJudgeBase() { }
-
-    public SkillJudgeBase(SkillJudgeBase other)
-    {
-        this.hitMask = other.hitMask;
-    }
-
     public abstract SkillJudgeBase Clone();
 
     public abstract void Perform(Transform transform);

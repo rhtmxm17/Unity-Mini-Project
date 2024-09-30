@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48aef8612c9253940a9224de7db9a3fd, type: 3}
-  m_Name: Sample Skill
+  m_Name: Projectile Skill
   m_EditorClassIdentifier: 
   hitMaskBase: 1
   preDelay: 0.5

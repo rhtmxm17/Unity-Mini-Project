@@ -237,6 +237,7 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             if (self.fireAction.inProgress)
             {
                 self.StartCoroutine(self.currentSkill.CastSkill(self.transform));
+                self.model.TriggerAttack();
             }
             else
             {

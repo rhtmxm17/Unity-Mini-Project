@@ -7,13 +7,6 @@ public class ProjectileSkill : SkillJudgeBase
 {
     [SerializeField] Projectile projectilePrefab;
 
-    public ProjectileSkill() { }
-
-    public ProjectileSkill(ProjectileSkill other) : base(other)
-    {
-        this.projectilePrefab = other.projectilePrefab;
-    }
-
     public override SkillJudgeBase Clone()
     {
         var clone = CreateInstance<ProjectileSkill>();
