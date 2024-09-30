@@ -18,7 +18,7 @@ public abstract class SkillJudgeBase : ScriptableObject
 
     public abstract SkillJudgeBase Clone();
 
-    public abstract void Perform();
+    public abstract void Perform(Transform transform);
 
     public void WhenTriggered(Collider other)
     {

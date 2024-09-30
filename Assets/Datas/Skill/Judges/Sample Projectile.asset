@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Sample Projectile
   m_EditorClassIdentifier: 
   hitMask: 1
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 9070044934236769513, guid: cc3b6faab264bd248bcc548aeda4d671,
+    type: 3}

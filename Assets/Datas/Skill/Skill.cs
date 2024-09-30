@@ -6,7 +6,9 @@ public class Skill
 {
     public event UnityAction OnSkillComplete;
 
-    private SkillJudgeBase skillJudge;
+    private SkillJudgeBase judge;
+    private SkillEffectBase effect;
+
     public float PreDelay { set => waitPreDelay = new WaitForSeconds(value); }
     public float PostDelay { set => waitPostDelay = new WaitForSeconds(value); }
 
@@ -15,14 +17,15 @@ public class Skill
 
     public Skill(SkillJudgeBase judge, SkillEffectBase effect)
     {
-        this.skillJudge = judge;
-        this.skillJudge.OnSkillHited = effect.Effect;
+        this.judge = judge;
+        this.effect = effect;
+        this.judge.OnSkillHited = effect.Effect;
     }
 
-    public IEnumerator CastSkill()
+    public IEnumerator CastSkill(Transform where)
     {
         yield return waitPreDelay;
-        skillJudge.Perform();
+        judge.Perform(where);
         yield return waitPostDelay;
         OnSkillComplete?.Invoke();
     }

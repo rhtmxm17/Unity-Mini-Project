@@ -7,7 +7,9 @@ public class DefaultSkillEffect : SkillEffectBase
 {
     public override SkillEffectBase Clone()
     {
-        return new DefaultSkillEffect();
+        var clone = CreateInstance<DefaultSkillEffect>();
+        clone.source = this.source;
+        return clone;
     }
 
     public override void Effect(IDamageable target)

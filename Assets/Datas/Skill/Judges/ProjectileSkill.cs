@@ -16,12 +16,15 @@ public class ProjectileSkill : SkillJudgeBase
 
     public override SkillJudgeBase Clone()
     {
-        return new ProjectileSkill(this);
+        var clone = CreateInstance<ProjectileSkill>();
+        clone.projectilePrefab = this.projectilePrefab;
+        clone.hitMask = this.hitMask;
+        return clone;
     }
 
-    public override void Perform()
+    public override void Perform(Transform transform)
     {
-        var instance = GameObject.Instantiate(projectilePrefab);
-        instance.OnTriggerEnter += WhenTriggered;
+        var instance = GameObject.Instantiate(projectilePrefab, transform.position, transform.rotation);
+        instance.OnTriggered += WhenTriggered;
     }
 }

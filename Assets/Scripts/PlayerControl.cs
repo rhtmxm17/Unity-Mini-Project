@@ -208,6 +208,7 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     private class AttackState : StateBase
     {
         private readonly PlayerControl self;
+        private readonly YieldInstruction waitRotationLock = new WaitForSeconds(0.1f);
 
         public AttackState(PlayerControl self)
         {
@@ -216,17 +217,18 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 
         public override void Enter()
         {
-            self.isLookCursor = false;
+            self.isLookCursor = true;
+            self.StartCoroutine(RotationLock());
             self.model.TriggerAttack();
 
             self.currentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
-            self.StartCoroutine(self.currentSkill.CastSkill());
+            self.StartCoroutine(self.currentSkill.CastSkill(self.transform));
         }
 
         public override void Exit()
         {
             self.currentSkill.OnSkillComplete -= CheckSkillLoop;
-            self.StopCoroutine(self.stateRoutine);
+            // self.StopCoroutine(self.stateRoutine);
         }
 
         private void CheckSkillLoop()
@@ -234,12 +236,21 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             // 공격 버튼을 누른채라면 반복
             if (self.fireAction.inProgress)
             {
-                self.StartCoroutine(self.currentSkill.CastSkill());
+                self.StartCoroutine(self.currentSkill.CastSkill(self.transform));
             }
             else
             {
-                self.ChangeState(State.Idle);
+                if (self.moveAction.inProgress)
+                    self.ChangeState(State.Move);
+                else
+                    self.ChangeState(State.Idle);
             }
+        }
+
+        private IEnumerator RotationLock()
+        {
+            yield return waitRotationLock;
+            self.isLookCursor = false;
         }
     }
 }
