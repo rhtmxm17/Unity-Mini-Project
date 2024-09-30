@@ -425,9 +425,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 473692789415471862}
+  - component: {fileID: 5972348889750643394}
   - component: {fileID: 3147877009745627129}
   - component: {fileID: 6189488717813512341}
-  - component: {fileID: 5972348889750643394}
   - component: {fileID: 4012746869955963927}
   m_Layer: 8
   m_Name: Humanoid Monster Base
@@ -456,6 +456,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5972348889750643394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3701388333078776260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc564d55c3b1ad748831dd75b0f314f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 5
+  hp: 10
+  detectRange: 10
+  sqrChaseRange: 400
+  skillData: {fileID: 11400000, guid: 273888e0488dd634ab0a22c780d2a5de, type: 2}
 --- !u!95 &3147877009745627129
 Animator:
   serializedVersion: 5
@@ -499,25 +516,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5972348889750643394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3701388333078776260}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc564d55c3b1ad748831dd75b0f314f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackRange: 5
-  hp: 10
-  detectRange: 10
-  sqrChaseRange: 400
-  sampleProjectile: {fileID: 3729594355163789498, guid: f7bd48b97dd072c4c98b94e3fe999ac4,
-    type: 3}
-  currentState: 0
 --- !u!136 &4012746869955963927
 CapsuleCollider:
   m_ObjectHideFlags: 0

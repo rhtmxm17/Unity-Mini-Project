@@ -35,13 +35,14 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
     [SerializeField] float detectRange = 10f;
     [SerializeField] float sqrChaseRange = 12f * 12f;
-    [SerializeField] SampleSkill sampleProjectile;
+    [SerializeField] SkillData skillData;
 
     private NavMeshAgent agent;
     private Animator animator;
 
     private State currentState = State.Idle;
     private StateBase[] states = new StateBase[(int)State._COUNT];
+    private Skill skill;
 
     private Coroutine currentRoutine;
     private Transform target;
@@ -65,12 +66,15 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
+        skill = skillData.BakeSkill(IDamageable.Flag.Player, this);
+
         OnDie = () => { ChangeState(State.Die); };
 
         states[(int)State.Idle] = new IdleState(this);
         states[(int)State.Chase] = new ChaseState(this);
         states[(int)State.Attack] = new AttackState(this);
         states[(int)State.Die] = new DieState(this);
+
     }
 
     private void Start()
@@ -196,8 +200,6 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     private class AttackState : StateBase
     {
         private readonly HumanoidMonster self;
-        public YieldInstruction attackPeriod = new WaitForSeconds(1f);
-
 
         public AttackState(HumanoidMonster self)
         {
@@ -206,28 +208,29 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
         public override void Enter()
         {
-            self.currentRoutine = self.StartCoroutine(AttackRoutine());
             self.agent.isStopped = true;
+            Attack();
+            self.skill.OnSkillComplete += WhenSkillComplete;
         }
 
         public override void Exit()
         {
             self.StopCoroutine(self.currentRoutine);
+            self.skill.OnSkillComplete -= WhenSkillComplete;
         }
 
-        private IEnumerator AttackRoutine()
+        private void Attack()
         {
-            do
-            {
-                self.animator.SetTrigger("Attack");
-                yield return attackPeriod;
+            self.currentRoutine = self.StartCoroutine(self.skill.CastSkill(self.transform));
+            self.animator.SetTrigger("Attack");
+        }
 
-                var projectile = Instantiate(self.sampleProjectile, self.transform.position, self.transform.rotation);
-                projectile.Init();
-                projectile.hitMask = IDamageable.Flag.Wall | IDamageable.Flag.Player;
-            } while (self.AttackCheckAndLook());
-
-            self.ChangeState(State.Chase);
+        private void WhenSkillComplete()
+        {
+            if (self.AttackCheckAndLook())
+                Attack();
+            else
+                self.ChangeState(State.Chase);
         }
     }
 
@@ -245,7 +248,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
             self.animator.SetTrigger("Die");
             self.GetComponent<Collider>().enabled = false;
             self.agent.isStopped = true;
-            Destroy(self.gameObject, 2f);
+            Destroy(self.gameObject, 4f);
         }
 
         public override void Exit()

@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Skill Effect/Default")]
 public class DefaultSkillEffect : SkillEffectBase
 {
+    [SerializeField] float baseDamage;
+
     public override SkillEffectBase Clone()
     {
         var clone = CreateInstance<DefaultSkillEffect>();
@@ -15,6 +17,6 @@ public class DefaultSkillEffect : SkillEffectBase
     public override void Effect(IDamageable target)
     {
         Debug.Log($"Skill Hitted: {target}");
-        target.TakeDamage(5f, source);
+        target.TakeDamage(baseDamage, source);
     }
 }

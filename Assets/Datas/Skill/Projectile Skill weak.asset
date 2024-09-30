@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48aef8612c9253940a9224de7db9a3fd, type: 3}
-  m_Name: Melee Skill
+  m_Name: Projectile Skill weak
   m_EditorClassIdentifier: 
-  hitMaskBase: 0
-  preDelay: 0.45
-  postDelay: 0.15
-  judge: {fileID: 11400000, guid: 69db2844b0c8a7142b284d5f4dcd0b81, type: 2}
-  effect: {fileID: 11400000, guid: c3ade3cbd6eb9b744b3b166e0e63c734, type: 2}
+  hitMaskBase: 1
+  preDelay: 0.5
+  postDelay: 0.2
+  judge: {fileID: 11400000, guid: 452763d02cd01cd458af485750a5c8bf, type: 2}
+  effect: {fileID: 11400000, guid: a12ae15352fdaf0449dc7b7dc7c21aef, type: 2}
