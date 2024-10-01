@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomData: {fileID: 0}
   floor: {fileID: 7659565265906171309}
-  elements: {fileID: 3203548105835894048}
+  units: {fileID: 3203548105835894048}
   exit: {fileID: 7190936038689517106}
   countUnits: 0
 --- !u!1 &3203548105835894048
@@ -62,7 +62,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9074607246617029507}
   m_Layer: 0
-  m_Name: Elements
+  m_Name: Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Room : MonoBehaviour
 {
-    [SerializeField] RoomData roomData;
-
+    public RoomData roomData;
     [SerializeField] GameObject floor;
     [SerializeField] GameObject units;
     [SerializeField] GameObject exit;
+
+    public Transform ExitTransform => exit.transform;
+    public event UnityAction OnRoomClear;
 
     [SerializeField] // 확인용
     private int countUnits;
 
     [ContextMenu("CreateRomm 호출 테스트")]
-    public void CreateRomm()
+    public void CreateRoom()
     {
         // 지형 정보 불러오기
         foreach (var element in roomData.props)
@@ -42,12 +45,21 @@ public class Room : MonoBehaviour
             if (clone.TryGetComponent(out IUnit unit))
             {
                 countUnits++;
-                unit.OnDie += () => { countUnits--; };
+                unit.OnDie += () =>
+                {
+                    countUnits--;
+                    if (countUnits == 0)
+                        OnRoomClear?.Invoke();
+                };
             }
         }
 
         // 출구 위치 불러오기
         exit.transform.SetLocalPositionAndRotation(roomData.exitPosition, roomData.exitRotation);
+
+        // 유닛이 없는 방일 경우 OnDie를 트리거 하지 않으므로 예외 처리
+        if (countUnits == 0)
+            OnRoomClear?.Invoke();
     }
 
 #if UNITY_EDITOR // 씬 뷰를 통한 ScriptableObject 편집용
