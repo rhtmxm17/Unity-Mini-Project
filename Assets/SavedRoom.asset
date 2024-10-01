@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3626ca92eb33231429575083f41e8136, type: 3}
+  m_Name: SavedRoom
+  m_EditorClassIdentifier: 
+  props:
+  - prefab: {fileID: 1151508871769602, guid: 180eb07dac405f74091830882393475f, type: 3}
+    position: {x: 1, y: 0, z: 16}
+    rotation: {x: -0, y: -0, z: -0, w: 1}
+  - prefab: {fileID: 1251191308365224, guid: 25d1599cd3c38794bb7b73ca506f4ff6, type: 3}
+    position: {x: 3, y: 0, z: 18}
+    rotation: {x: -0, y: -0, z: -0, w: 1}
+  units: []
+  exitPosition: {x: 0, y: 0, z: 0}
+  exitRotation: {x: 0, y: 0, z: 0, w: 0}

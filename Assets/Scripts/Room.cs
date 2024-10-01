@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,9 +8,9 @@ public class Room : MonoBehaviour
 {
     [SerializeField] RoomData roomData;
 
-    private GameObject floor;
-    private GameObject elements;
-    private GameObject exit;
+    [SerializeField] GameObject floor;
+    [SerializeField] GameObject units;
+    [SerializeField] GameObject exit;
 
     [SerializeField] // 확인용
     private int countUnits;
@@ -17,9 +18,7 @@ public class Room : MonoBehaviour
     [ContextMenu("CreateRomm 호출 테스트")]
     public void CreateRomm()
     {
-        floor = new GameObject("Floor");
-        floor.transform.parent = this.transform;
-        floor.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        // 지형 정보 불러오기
         foreach (var element in roomData.props)
         {
             var clone = Instantiate(element.prefab, this.floor.transform);
@@ -32,19 +31,13 @@ public class Room : MonoBehaviour
             }
         }
 
+        // NavMesh 갱신
         NavManager.Instance.BakeNavMesh();
 
-        exit = new GameObject("Exit");
-        exit.transform.parent = this.transform;
-        exit.transform.SetLocalPositionAndRotation(roomData.exitPosition, roomData.exitRotation);
-
-        elements = new GameObject("Elements");
-        elements.transform.parent = this.transform;
-        elements.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-
+        // 유닛 정보 불러오기
         foreach (var element in roomData.units)
         {
-            var clone = Instantiate(element.prefab, this.elements.transform);
+            var clone = Instantiate(element.prefab, this.units.transform);
             clone.transform.SetLocalPositionAndRotation(element.position, element.rotation);
             if (clone.TryGetComponent(out IUnit unit))
             {
@@ -52,13 +45,52 @@ public class Room : MonoBehaviour
                 unit.OnDie += () => { countUnits--; };
             }
         }
+
+        // 출구 위치 불러오기
+        exit.transform.SetLocalPositionAndRotation(roomData.exitPosition, roomData.exitRotation);
     }
 
 #if UNITY_EDITOR // 씬 뷰를 통한 ScriptableObject 편집용
     [ContextMenu("Room Data에 저장")]
-    private void ApplyToRoomData()
+    private void CreateRoomData()
     {
-        Debug.LogError("Not Implement");
+        RoomData newRoom = ScriptableObject.CreateInstance<RoomData>();
+
+        // 지형 정보 저장
+        for (int i = 0; i < floor.transform.childCount; i++)
+        {
+            Transform floorElement = floor.transform.GetChild(i);
+
+            // 오브젝트로부터 프리펩 참조 가져오기
+            // 그냥 넣어도 프리펩이 들어가는듯?
+            // PrefabUtility.GetCorrespondingObjectFromOriginalSource(floorElement.gameObject);
+            newRoom.props.Add(new RoomData.SingleData()
+            {
+                prefab = floorElement.gameObject,
+                position = floorElement.localPosition,
+                rotation = floorElement.localRotation,
+            });
+        }
+
+        // 지형 정보 저장
+        for (int i = 0; i < units.transform.childCount; i++)
+        {
+            Transform unitElement = floor.transform.GetChild(i);
+
+            newRoom.units.Add(new RoomData.SingleData()
+            {
+                prefab = unitElement.gameObject,
+                position = unitElement.localPosition,
+                rotation = unitElement.localRotation,
+            });
+        }
+
+        // 출구 위치 저장
+        newRoom.exitPosition = exit.transform.localPosition;
+        newRoom.exitRotation = exit.transform.localRotation;
+
+        AssetDatabase.CreateAsset(newRoom, "Assets/SavedRoom.asset");
+        Debug.Log("Assets/SavedRoom.asset 으로 저장됨");
     }
 #endif
 }
