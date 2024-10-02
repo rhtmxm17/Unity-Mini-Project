@@ -73,12 +73,10 @@ public class Room : MonoBehaviour
         {
             Transform floorElement = floor.transform.GetChild(i);
 
-            // 오브젝트로부터 프리펩 참조 가져오기
-            // 그냥 넣어도 프리펩이 들어가는듯?
-            // PrefabUtility.GetCorrespondingObjectFromOriginalSource(floorElement.gameObject);
             newRoom.props.Add(new RoomData.SingleData()
             {
-                prefab = floorElement.gameObject,
+                // 오브젝트로부터 프리펩 참조 가져오기
+                prefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(floorElement.gameObject),
                 position = floorElement.localPosition,
                 rotation = floorElement.localRotation,
             });
@@ -87,11 +85,11 @@ public class Room : MonoBehaviour
         // 지형 정보 저장
         for (int i = 0; i < units.transform.childCount; i++)
         {
-            Transform unitElement = floor.transform.GetChild(i);
+            Transform unitElement = units.transform.GetChild(i);
 
             newRoom.units.Add(new RoomData.SingleData()
             {
-                prefab = unitElement.gameObject,
+                prefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(unitElement.gameObject),
                 position = unitElement.localPosition,
                 rotation = unitElement.localRotation,
             });

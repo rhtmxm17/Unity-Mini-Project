@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3535331483299635962
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2688320196892352768, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_Name
+      value: Room Tiling Tool
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681508922972148556, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7848f41eff55d2a4fb5ed4cd7b718207, type: 3}
+--- !u!1 &1467841121120060410 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2688320196892352768, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+    type: 3}
+  m_PrefabInstance: {fileID: 3535331483299635962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!156049354 &1890843938919756738
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467841121120060410}
+  m_Enabled: 1
+  m_CellSize: {x: 2, y: 2, z: 0}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 1
+--- !u!1 &6583201927966072663 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7659565265906171309, guid: 7848f41eff55d2a4fb5ed4cd7b718207,
+    type: 3}
+  m_PrefabInstance: {fileID: 3535331483299635962}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1839735485 &7532278792809737214
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6583201927966072663}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 1
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3626ca92eb33231429575083f41e8136, type: 3}
-  m_Name: SavedRoom
+  m_Name: Tool Created Room 1
   m_EditorClassIdentifier: 
   props:
   - prefab: {fileID: 1256093442512822, guid: 18934d5568f8de248a7c159827a036a6, type: 3}
@@ -92,10 +92,10 @@ MonoBehaviour:
   - prefab: {fileID: 6891580169314388076, guid: 33e082d957733aa449b7a249244038c9,
       type: 3}
     position: {x: -5.279363, y: 0.20000172, z: 7.701354}
-    rotation: {x: -0, y: -0, z: -0, w: 1}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
   - prefab: {fileID: 3701388333078776260, guid: 476f5fd65811d7141bdc7d6405651274,
       type: 3}
     position: {x: 2.8735385, y: 0.100001335, z: 7.6798086}
-    rotation: {x: -0, y: -0, z: -0, w: 1}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
   exitPosition: {x: 0, y: 0, z: 12}
   exitRotation: {x: 0, y: 0, z: 0, w: 1}
