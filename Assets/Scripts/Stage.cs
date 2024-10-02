@@ -23,11 +23,6 @@ public class Stage : MonoBehaviour
 #endif
     public void CreateStage()
     {
-        if (false == EditorApplication.isPlaying)
-        {
-
-        }
-
         Vector3 roomPosition = transform.position;
         Quaternion roomRotation = transform.rotation;
 
