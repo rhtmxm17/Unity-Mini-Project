@@ -14,6 +14,7 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
         private set
         {
             hp = value;
+            unitUI.CurHP = hp;
             if (hp <= 0f)
                 OnDie?.Invoke();
         }
@@ -36,6 +37,8 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     [SerializeField] float detectRange = 10f;
     [SerializeField] float sqrChaseRange = 12f * 12f;
     [SerializeField] SkillData skillData;
+
+    [SerializeField] UnitUI unitUI;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -81,6 +84,9 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
     {
         currentState = State.Idle;
         states[(int)State.Idle].Enter();
+
+        unitUI.MaxHP = hp;
+        unitUI.CurHP = hp;
     }
 
     private void ChangeState(State state)

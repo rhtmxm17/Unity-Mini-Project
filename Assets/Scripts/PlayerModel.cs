@@ -11,8 +11,11 @@ public class PlayerModel : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] Vector3 localVelocity;
     [SerializeField] int skillIndex;
+    [SerializeField] float maxHP;
+    [SerializeField] float curHP;
 
-    // Viewer
+    [Header("Viewer")]
+    [SerializeField] UnitUI unitUI;
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -41,6 +44,18 @@ public class PlayerModel : MonoBehaviour
         set { skillIndex = value; OnSkillIndexChanged.Invoke(); }
     }
 
+    public float MaxHP
+    {
+        get => maxHP;
+        set { maxHP = value; OnMaxHP_Changed.Invoke(); }
+    }
+
+    public float CurHP
+    {
+        get => curHP;
+        set { curHP = value; OnCurHP_Changed.Invoke(); }
+    }
+
     public void TriggerAttack()
     {
         animator.SetTrigger(Hash_Attack);
@@ -51,6 +66,8 @@ public class PlayerModel : MonoBehaviour
     public event UnityAction OnMoveSpeedChanged;
     public event UnityAction OnLocalVelocityChanged;
     public event UnityAction OnSkillIndexChanged;
+    public event UnityAction OnMaxHP_Changed;
+    public event UnityAction OnCurHP_Changed;
 
     // Hash
     private static readonly int Hash_VelocityZ = Animator.StringToHash("VelocityZ");
@@ -67,6 +84,21 @@ public class PlayerModel : MonoBehaviour
         OnMoveSpeedChanged = PresentMoveSpeed;
         OnLocalVelocityChanged = PresentLocalVelocity;
         OnSkillIndexChanged = PresentSkillIndex;
+        OnMaxHP_Changed = PresentMaxHP;
+        OnCurHP_Changed = PresentCurHP;
+    }
+
+    private void Start()
+    {
+        // 초기값 전달
+        OnMovingChanged.Invoke();
+        OnMoveSpeedChanged.Invoke();
+        OnMoveSpeedChanged.Invoke();
+        OnSkillIndexChanged.Invoke();
+        OnMaxHP_Changed.Invoke();
+        OnCurHP_Changed.Invoke();
+
+        unitUI.HP_SliderColor = Color.green;
     }
 
     private void PresentMoving()
@@ -87,5 +119,15 @@ public class PlayerModel : MonoBehaviour
     private void PresentSkillIndex()
     {
         animator.SetInteger(Hash_Switch, skillIndex);
+    }
+
+    private void PresentMaxHP()
+    {
+        unitUI.MaxHP = maxHP;
+    }
+
+    private void PresentCurHP()
+    {
+        unitUI.CurHP = curHP;
     }
 }

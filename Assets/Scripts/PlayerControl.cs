@@ -8,9 +8,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(NavMeshAgent), typeof(PlayerInput))]
 public class PlayerControl : MonoBehaviour, IDamageable, IUnit
 {
-    public event UnityAction OnDie;
-    public float Hp { get { Debug.LogWarning("Not Implimented"); return 0; } }
-
     [SerializeField] Transform cursorMarker;
 
     [SerializeField] SkillData[] skillDatas;
@@ -36,13 +33,18 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
     private Skill[] skills;
     private Skill CurrentSkill { get => skills[model.SkillIndex]; }
 
+    #region IUnit
+    public event UnityAction OnDie;
+    public float Hp { get => model.CurHP; }
+    #endregion
+
     #region IDamageable
     public IDamageable.Flag HitFlag => IDamageable.Flag.Player;
-
 
     public void TakeDamage(float damage, IUnit source = null)
     {
         Debug.Log($"피격 데미지: {damage}");
+        model.CurHP -= damage;
     }
     #endregion IDamageable
 
