@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,11 +10,24 @@ public class Stage : MonoBehaviour
     [SerializeField] RoomData bossRoom;
     [SerializeField, Tooltip("보스방을 제외한 방 개수")] int numRooms;
 
-    public event UnityAction OnStageClear;
+    public UnityEvent OnStageClear;
 
-    [ContextMenu("CreateStage 호출")]
+#if UNITY_EDITOR
+    [ContextMenu("CreateStage 호출 (Play Mode)", true)]
+    private bool IsPlayMode()
+    {
+        return EditorApplication.isPlaying;
+    }
+
+    [ContextMenu("CreateStage 호출 (Play Mode)")]
+#endif
     public void CreateStage()
     {
+        if (false == EditorApplication.isPlaying)
+        {
+
+        }
+
         Vector3 roomPosition = transform.position;
         Quaternion roomRotation = transform.rotation;
 
@@ -26,7 +40,7 @@ public class Stage : MonoBehaviour
             nextRoom.name = $"Room {i}";
             nextRoom.roomData = randomRoomTable[Random.Range(0, randomRoomTable.Length)];
 
-            roomPosition = nextRoom.transform.localToWorldMatrix * nextRoom.roomData.exitPosition;
+            roomPosition = nextRoom.transform.TransformPoint(nextRoom.roomData.exitPosition);
             roomRotation = nextRoom.transform.rotation * nextRoom.roomData.exitRotation;
 
             // 이전 방이 클리어되면 생성되도록 설정
@@ -43,8 +57,8 @@ public class Stage : MonoBehaviour
             nextRoom.name = $"Boss Room";
             nextRoom.roomData = bossRoom;
 
-            roomPosition = nextRoom.roomData.exitPosition;
-            roomRotation = nextRoom.roomData.exitRotation;
+            roomPosition = nextRoom.transform.TransformPoint(nextRoom.roomData.exitPosition);
+            roomRotation = nextRoom.transform.rotation * nextRoom.roomData.exitRotation;
 
             // 이전 방이 클리어되면 생성되도록 설정
             if (previousRoom != null)
@@ -55,7 +69,7 @@ public class Stage : MonoBehaviour
         }
 
         // 보스룸 클리어 이벤트
-        previousRoom.OnRoomClear += OnStageClear;
+        previousRoom.OnRoomClear += OnStageClear.Invoke;
 
         // 첫번째 방 생성
         firstRoom.CreateRoom();

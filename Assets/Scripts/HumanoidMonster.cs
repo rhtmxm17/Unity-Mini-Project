@@ -85,7 +85,6 @@ public class HumanoidMonster : MonoBehaviour, IDamageable, IUnit
 
     private void ChangeState(State state)
     {
-        Debug.Log($"{currentState}=>{state}");
         states[(int)currentState].Exit();
         currentState = state;
         states[(int)currentState].Enter();
