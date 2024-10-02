@@ -253,8 +253,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             self.StartCoroutine(RotationLock());
             self.model.TriggerAttack();
 
-            self.CurrentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
             self.stateRoutine = self.StartCoroutine(self.CurrentSkill.CastSkill(self.transform));
+            self.CurrentSkill.OnSkillComplete += CheckSkillLoop; // 스킬 시전 완료시 반복할지 확인
         }
 
         public override void Exit()
@@ -268,6 +268,8 @@ public class PlayerControl : MonoBehaviour, IDamageable, IUnit
             // 공격 버튼을 누른채라면 반복
             if (self.fireAction.inProgress)
             {
+                self.isLookCursor = true;
+                self.StartCoroutine(RotationLock());
                 self.stateRoutine = self.StartCoroutine(self.CurrentSkill.CastSkill(self.transform));
                 self.model.TriggerAttack();
             }
